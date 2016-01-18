@@ -23,51 +23,49 @@ namespace EntryPoint
 
         public void MergeSort(Vector2 house)
         {
-            MergeSort(house, listContent, listContent.Length);
+            MergeSort(house, listContent, 0, listContent.Length - 1);
         }
 
-        private void MergeSort(Vector2 house, Vector2[] array, int length)
+        public void MergeSort(Vector2 house, Vector2[] array, int left, int right)
         {
-            // Check if there's more than 1 element in the array
-            if (length < 2)
-                return;
-
-            int middle = length / 2; // Will always round towards the smallest possible absolute value
-
-            Vector2[] leftArray = new Vector2[middle];
-            Vector2[] rightArray = new Vector2[length - middle]; // Will be the larger array if the array is odd while splitting
-
-            for (int i = 0; i < middle; i++)
+            if (left < right)
             {
-                leftArray[i] = array[i];
-            }
-            for (int i = middle; i < length; i++)
-            {
-                rightArray[i - middle] = array[i];
-            }
+                int middle = (left + right) / 2;
 
-            MergeSort(house, leftArray, middle);
-            MergeSort(house, rightArray, length - middle);
-            Merge(house, array, leftArray, rightArray, middle, length - middle);
+                MergeSort(house, array, left, middle);
+                MergeSort(house, array, middle + 1, right);
+                Merge(house, array, left, middle, right);
+            }
         }
-
-        private void Merge(Vector2 house, Vector2[] array, Vector2[] left, Vector2[] right, int leftLength, int rightLength)
+        public void Merge(Vector2 house, Vector2[] array, int left, int middle, int right)
         {
-            int arrayPosition = 0;
-            int leftArrayPosition = 0;
-            int rightArrayPosition = 0;
+            int leftLength = middle - left + 1;
+            int rightLength = right - middle;
 
-            while (leftArrayPosition < leftLength && rightArrayPosition < rightLength)
+            Vector2[] leftArray = new Vector2[leftLength + 1];
+            Vector2[] rightArray = new Vector2[rightLength + 1];
+
+            for (int i = 0; i < leftLength; i++)
             {
-                if (Vector2.Distance(left[leftArrayPosition], house) <= Vector2.Distance(right[rightArrayPosition], house))
-                    array[arrayPosition++] = left[leftArrayPosition++];
+                leftArray[i] = array[left + i];
+            }
+            for (int i = 0; i < rightLength; i++)
+            {
+                rightArray[i] = array[middle + i + 1];
+            }
+
+            leftArray[leftLength] = new Vector2(float.PositiveInfinity);
+            rightArray[rightLength] = new Vector2(float.PositiveInfinity);
+
+            int leftCounter = 0;
+            int rightCounter = 0;
+            for (int i = left; i <= right; i++)
+            {
+                if (Vector2.Distance(leftArray[leftCounter], house) < Vector2.Distance(rightArray[rightCounter], house))
+                    array[i] = leftArray[leftCounter++];
                 else
-                    array[arrayPosition++] = right[rightArrayPosition++];
+                    array[i] = rightArray[rightCounter++];
             }
-            while (leftArrayPosition < leftLength)
-                array[arrayPosition++] = left[leftArrayPosition++];
-            while (rightArrayPosition < rightLength)
-                array[arrayPosition++] = right[rightArrayPosition++];
         }
     }
 }
