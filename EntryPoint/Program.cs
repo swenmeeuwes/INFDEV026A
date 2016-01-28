@@ -76,14 +76,14 @@ namespace EntryPoint
         private static IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>> FindRoutesToAll(Vector2 startingBuilding,
           IEnumerable<Vector2> destinationBuildings, IEnumerable<Tuple<Vector2, Vector2>> roads)
         {
-            //Vector2[] specialBuildings = new Vector2[destinationBuildings.Count() + 1];
-            //specialBuildings[0] = startingBuilding;
-            //IEnumerator destinationBuildingsEnumerator = destinationBuildings.GetEnumerator();
-            //int i = 1;
-            //while (destinationBuildingsEnumerator.MoveNext())
-            //{
-            //    specialBuildings[i++] = (Vector2)destinationBuildingsEnumerator.Current;
-            //}
+            Vector2[] specialBuildings = new Vector2[destinationBuildings.Count() + 1];
+            specialBuildings[0] = startingBuilding;
+            IEnumerator destinationBuildingsEnumerator = destinationBuildings.GetEnumerator();
+            int i = 1;
+            while (destinationBuildingsEnumerator.MoveNext())
+            {
+                specialBuildings[i++] = (Vector2)destinationBuildingsEnumerator.Current;
+            }
 
             Assignment3FloydWarshall floydwarshall = new Assignment3FloydWarshall(roads.ToArray());
             floydwarshall.SaveAdjacencyMatrixToFile("Assignment 3 - Floyd Warshall adjacency matrix");

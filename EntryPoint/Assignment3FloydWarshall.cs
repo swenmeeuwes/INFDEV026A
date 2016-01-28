@@ -9,8 +9,8 @@ namespace EntryPoint
     {
         //private Tuple<Vector2, Vector2>[] edges;
         private bool[,] roadAdjacencyMatrix;
-        private float[,] roadDistanceMatrix;
-        private Tuple<Vector2, Vector2>[,] roadPredecessorMatrix;
+        private float[,] distanceMatrix;
+        private Tuple<Vector2, Vector2>[,] predecessorMatrix;
 
         //private bool[,] adjacencyMatrix;
         //private float[,] distanceMatrix;
@@ -38,8 +38,8 @@ namespace EntryPoint
 
             //this.edges = edges;
             roadAdjacencyMatrix = new bool[edges.Length, edges.Length];
-            roadDistanceMatrix = new float[edges.Length, edges.Length];
-            roadPredecessorMatrix = new Tuple<Vector2, Vector2>[edges.Length, edges.Length];
+            distanceMatrix = new float[edges.Length, edges.Length];
+            predecessorMatrix = new Tuple<Vector2, Vector2>[edges.Length, edges.Length];
 
             for (int i = 0; i < edges.Length; i++)
             {
@@ -57,18 +57,18 @@ namespace EntryPoint
                     // 0 is the distance between a vertex and itself
                     if (i == j)
                     {
-                        roadDistanceMatrix[i, j] = 0;
+                        distanceMatrix[i, j] = 0;
                         continue;
                     }
 
                     // w(i,j) is the distance between adjacent vertices, ∞ is the distance between non-adjacent vertices
                     if (roadAdjacencyMatrix[i, j])
                     {
-                        roadPredecessorMatrix[i, j] = edges[i];
-                        roadDistanceMatrix[i, j] = Vector2.Distance(edges[i].Item1, edges[i].Item2);
+                        predecessorMatrix[i, j] = edges[i];
+                        distanceMatrix[i, j] = Vector2.Distance(edges[i].Item1, edges[i].Item2);
                     }
                     else
-                        roadDistanceMatrix[i, j] = float.PositiveInfinity;
+                        distanceMatrix[i, j] = float.PositiveInfinity;
                 }
             }
 
@@ -120,11 +120,11 @@ namespace EntryPoint
             Directory.CreateDirectory(ConfigurationManager.AppSettings["saveDirectory"]);
             using (StreamWriter file = new StreamWriter(ConfigurationManager.AppSettings["saveDirectory"] + @"\" + fileName + ".txt"))
             {
-                for (int i = 0; i < roadDistanceMatrix.GetLength(0); i++)
+                for (int i = 0; i < distanceMatrix.GetLength(0); i++)
                 {
-                    for (int j = 0; j < roadDistanceMatrix.GetLength(1); j++)
+                    for (int j = 0; j < distanceMatrix.GetLength(1); j++)
                     {
-                        file.Write(roadDistanceMatrix[i, j]);
+                        file.Write(distanceMatrix[i, j] + " ");
                     }
                     file.Write(Environment.NewLine);
                 }
@@ -136,12 +136,12 @@ namespace EntryPoint
             Directory.CreateDirectory(ConfigurationManager.AppSettings["saveDirectory"]);
             using (StreamWriter file = new StreamWriter(ConfigurationManager.AppSettings["saveDirectory"] + @"\" + fileName + ".txt"))
             {
-                for (int i = 0; i < roadPredecessorMatrix.GetLength(0); i++)
+                for (int i = 0; i < predecessorMatrix.GetLength(0); i++)
                 {
-                    for (int j = 0; j < roadPredecessorMatrix.GetLength(1); j++)
+                    for (int j = 0; j < predecessorMatrix.GetLength(1); j++)
                     {
-                        if (roadPredecessorMatrix[i, j] != null)
-                            file.Write(roadPredecessorMatrix[i, j] + " ");
+                        if (predecessorMatrix[i, j] != null)
+                            file.Write(predecessorMatrix[i, j] + " ");
                         else
                             file.Write(" -  ");
                     }
