@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using EntryPoint.Assignment2;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,12 +50,26 @@ namespace EntryPoint
           IEnumerable<Vector2> specialBuildings,
           IEnumerable<Tuple<Vector2, float>> housesAndDistances)
         {
-            return
-                from h in housesAndDistances
-                select
-                  from s in specialBuildings
-                  where Vector2.Distance(h.Item1, s) <= h.Item2
-                  select s;
+            KdTree tree = new KdTree();
+            foreach (var building in specialBuildings)
+            {
+                tree.Insert(new Tuple<float, float>(building.X, building.Y));
+            }
+
+            List<List<Vector2>> specialBuildingWithinDistanceFromHouses = new List<List<Vector2>>();
+            foreach (var house in housesAndDistances)
+            {
+                specialBuildingWithinDistanceFromHouses.Add(tree.GetAllNodesWithinDistance(house.Item1, house.Item2).ToList());
+            }
+
+            return specialBuildingWithinDistanceFromHouses;
+
+            //return
+            //    from h in housesAndDistances
+            //    select
+            //      from s in specialBuildings
+            //      where Vector2.Distance(h.Item1, s) <= h.Item2
+            //      select s;
         }
 
         private static IEnumerable<Tuple<Vector2, Vector2>> FindRoute(Vector2 startingBuilding,
