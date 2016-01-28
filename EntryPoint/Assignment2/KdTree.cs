@@ -63,8 +63,8 @@ namespace EntryPoint.Assignment2
                 return foundNodes;
             if (Vector2.Distance(startPosition, new Vector2(root.key.Item1, root.key.Item2)) <= distance)
                 foundNodes.Add(new Vector2(root.key.Item1, root.key.Item2));
-            PrintInOrderRec(root.left);
-            PrintInOrderRec(root.right);
+            GetAllNodesWithinDistanceRec(foundNodes, root.left, startPosition, distance);
+            GetAllNodesWithinDistanceRec(foundNodes, root.right, startPosition, distance);
             return foundNodes;
         }
         private void PrintPreOrderRec(IKdNode<float> root)
