@@ -44,7 +44,16 @@
   <ItemGroup>
     <Compile Include="AlgorithmAnalyzer.cs" />
     <Compile Include="Assignment1.cs" />
+<<<<<<< HEAD
     <Compile Include="Assignment3FloydWarshall.cs" />
+=======
+    <Compile Include="Assignment2\DuplicateNodeException.cs" />
+    <Compile Include="Assignment2\EmptyKdNode.cs" />
+    <Compile Include="Assignment2\IKdNode.cs" />
+    <Compile Include="Assignment2\KdNode.cs" />
+    <Compile Include="Assignment2\KdTree.cs" />
+    <Compile Include="Assignment2\NodeIsEmptyException.cs" />
+>>>>>>> refs/remotes/origin/master
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,7 +63,13 @@
       <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+<<<<<<< HEAD
     <Reference Include="System.Configuration" />
+=======
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+>>>>>>> refs/remotes/origin/master
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
