@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace EntryPoint
@@ -57,10 +58,14 @@ namespace EntryPoint
             }
 
             List<List<Vector2>> specialBuildingWithinDistanceFromHouses = new List<List<Vector2>>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Restart();
             foreach (var house in housesAndDistances)
             {
                 specialBuildingWithinDistanceFromHouses.Add(tree.GetAllNodesWithinDistance(house.Item1, house.Item2).ToList());
             }
+            stopwatch.Stop();
+            Console.WriteLine("Took {0} milliseconds", stopwatch.ElapsedMilliseconds);
 
             return specialBuildingWithinDistanceFromHouses;
 
