@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="AlgorithmAnalyzer.cs" />
     <Compile Include="Assignment1.cs" />
+    <Compile Include="Assignment2\DuplicateNodeException.cs" />
     <Compile Include="Assignment2\EmptyKdNode.cs" />
     <Compile Include="Assignment2\IKdNode.cs" />
     <Compile Include="Assignment2\KdNode.cs" />

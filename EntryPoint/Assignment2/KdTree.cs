@@ -43,7 +43,7 @@ namespace EntryPoint.Assignment2
                 return new KdNode<float>(key, new EmptyKdNode<float>(), new EmptyKdNode<float>());
 
             if (root.key == key)
-                return root;
+                throw new DuplicateNodeException("Binary Search Trees don't allow duplicate nodes");
 
             if (dimension % 2 == 0) {
                 if (root.key.Item1 > key.Item1)
@@ -66,7 +66,7 @@ namespace EntryPoint.Assignment2
                 return new KdNode<float>(key, new EmptyKdNode<float>(), new EmptyKdNode<float>());
 
             if (root.key == key)
-                return root;
+                throw new DuplicateNodeException("Binary Search Trees don't allow duplicate nodes");
 
             if (root.key.Item1 > key.Item1)
                 return new KdNode<float>(root.key, InsertYRec(root.left, key), root.right);
@@ -79,7 +79,7 @@ namespace EntryPoint.Assignment2
                 return new KdNode<float>(key, new EmptyKdNode<float>(), new EmptyKdNode<float>());
 
             if (root.key == key)
-                return root;
+                throw new DuplicateNodeException("Binary Search Trees don't allow duplicate nodes");
             if (root.key.Item2 > key.Item2)
                 return new KdNode<float>(root.key, InsertXRec(root.left, key), root.right);
             else
