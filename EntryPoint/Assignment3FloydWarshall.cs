@@ -7,21 +7,13 @@ namespace EntryPoint
 {
     class Assignment3FloydWarshall
     {
-        //private Tuple<Vector2, Vector2>[] edges;
         private bool[,] roadAdjacencyMatrix;
-        private float[,] distanceMatrix;
-        private Tuple<Vector2, Vector2>[,] predecessorMatrix;
-
-        //private bool[,] adjacencyMatrix;
-        //private float[,] distanceMatrix;
-        //private Tuple<Vector2, Vector2>[,] predecessorMatrix;
+        public int[,] distanceMatrix { get; private set; }
+        public Tuple<Vector2, Vector2>[,] predecessorMatrix { get; private set; }
 
         // O(n^3)
-        public Assignment3FloydWarshall(Tuple<Vector2, Vector2>[] edges) //Vector2[] vertices, 
+        public Assignment3FloydWarshall(Tuple<Vector2, Vector2>[] roads)
         {
-            //Test data
-            //edges = new Tuple<Vector2, Vector2>[] { new Tuple<Vector2, Vector2>(new Vector2(0,0), new Vector2(0,1)), new Tuple<Vector2, Vector2>(new Vector2(0, 1), new Vector2(1, 1)), new Tuple<Vector2, Vector2>(new Vector2(0, 1), new Vector2(0, 2))};
-
             //float farestX = 0;
             //float farestY = 0;
             //foreach (var item in edges)
@@ -36,23 +28,22 @@ namespace EntryPoint
             //        farestY = item.Item2.Y;
             //}
 
-            //this.edges = edges;
-            roadAdjacencyMatrix = new bool[edges.Length, edges.Length];
-            distanceMatrix = new float[edges.Length, edges.Length];
-            predecessorMatrix = new Tuple<Vector2, Vector2>[edges.Length, edges.Length];
+            roadAdjacencyMatrix = new bool[roads.Length, roads.Length];
+            distanceMatrix = new int[roads.Length, roads.Length];
+            predecessorMatrix = new Tuple<Vector2, Vector2>[roads.Length, roads.Length];
 
-            for (int i = 0; i < edges.Length; i++)
+            for (int i = 0; i < roads.Length; i++)
             {
-                for (int j = 0; j < edges.Length; j++)
+                for (int j = 0; j < roads.Length; j++)
                 {
-                    roadAdjacencyMatrix[i, j] = (edges[i].Item1.Equals(edges[j].Item2) || edges[i].Item2.Equals(edges[j].Item1));
+                    roadAdjacencyMatrix[i, j] = (roads[i].Item1.Equals(roads[j].Item2) || roads[i].Item2.Equals(roads[j].Item1));
                 }
             }
 
             // Distance - & Predecessor matrix
-            for (int i = 0; i < edges.Length; i++)
+            for (int i = 0; i < roads.Length; i++)
             {
-                for (int j = 0; j < edges.Length; j++)
+                for (int j = 0; j < roads.Length; j++)
                 {
                     // 0 is the distance between a vertex and itself
                     if (i == j)
@@ -64,36 +55,29 @@ namespace EntryPoint
                     // w(i,j) is the distance between adjacent vertices, ∞ is the distance between non-adjacent vertices
                     if (roadAdjacencyMatrix[i, j])
                     {
-                        predecessorMatrix[i, j] = edges[i];
-                        distanceMatrix[i, j] = Vector2.Distance(edges[i].Item1, edges[i].Item2);
+                        predecessorMatrix[i, j] = roads[i];
+                        distanceMatrix[i, j] = 1;//Vector2.Distance(edges[i].Item1, edges[i].Item2);
                     }
                     else
-                        distanceMatrix[i, j] = float.PositiveInfinity;
+                        distanceMatrix[i, j] = Int16.MaxValue;//float.PositiveInfinity;
                 }
             }
 
-            //fork from1 to | V |
-            //fori from1 to| V |
-            //forj from1 to| V |
-            //ifdist[i][j] > dist[i][k] + dist[k][j]
-            //dist[i][j] ← dist[i][k] + dist[k][j]
-            //end if
-
-            //for (int k = 0; k < edges.Length; k++)
-            //{
-            //    Console.WriteLine("Iteration k={0}", k);
-            //    for (int i = 0; i < edges.Length; i++)
-            //    {
-            //        for (int j = 0; j < edges.Length; j++)
-            //        {
-            //            if (roadDistanceMatrix[i, j] > roadDistanceMatrix[i, k] + roadDistanceMatrix[k, j])
-            //            {
-            //                roadDistanceMatrix[i, j] = roadDistanceMatrix[i, k] + roadDistanceMatrix[k, j];
-            //                roadPredecessorMatrix[i, j] = edges[k];
-            //            }
-            //        }
-            //    }
-            //}
+            for (int k = 0; k < roads.Length; k++)
+            {
+                Console.WriteLine("Iteration k={0}", k);
+                for (int i = 0; i < roads.Length; i++)
+                {
+                    for (int j = 0; j < roads.Length; j++)
+                    {
+                        if (distanceMatrix[i, j] > distanceMatrix[i, k] + distanceMatrix[k, j])
+                        {
+                            distanceMatrix[i, j] = distanceMatrix[i, k] + distanceMatrix[k, j];
+                            predecessorMatrix[i, j] = roads[k];
+                        }
+                    }
+                }
+            }
         }
 
         public void SaveAdjacencyMatrixToFile(string fileName)

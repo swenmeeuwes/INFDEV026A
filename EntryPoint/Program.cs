@@ -42,11 +42,11 @@ namespace EntryPoint
 
         private static IEnumerable<Vector2> SortSpecialBuildingsByDistance(Vector2 house, IEnumerable<Vector2> specialBuildings)
         {
-            //return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
-
             Assignment1 specialBuildingsList = new Assignment1(specialBuildings.ToArray());
             specialBuildingsList.MergeSort(house);
             return specialBuildingsList.listContent;
+
+            //return specialBuildings.OrderBy(v => Vector2.Distance(v, house));
         }
 
         private static IEnumerable<IEnumerable<Vector2>> FindSpecialBuildingsWithinDistanceFromHouse(
@@ -60,14 +60,10 @@ namespace EntryPoint
             }
 
             List<List<Vector2>> specialBuildingWithinDistanceFromHouses = new List<List<Vector2>>();
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Restart();
             foreach (var house in housesAndDistances)
             {
                 specialBuildingWithinDistanceFromHouses.Add(tree.GetAllNodesWithinDistance(house.Item1, house.Item2).ToList());
             }
-            stopwatch.Stop();
-            Console.WriteLine("Took {0} milliseconds", stopwatch.ElapsedMilliseconds);
 
             return specialBuildingWithinDistanceFromHouses;
 
@@ -96,19 +92,45 @@ namespace EntryPoint
         private static IEnumerable<IEnumerable<Tuple<Vector2, Vector2>>> FindRoutesToAll(Vector2 startingBuilding,
           IEnumerable<Vector2> destinationBuildings, IEnumerable<Tuple<Vector2, Vector2>> roads)
         {
-            Vector2[] specialBuildings = new Vector2[destinationBuildings.Count() + 1];
-            specialBuildings[0] = startingBuilding;
-            IEnumerator destinationBuildingsEnumerator = destinationBuildings.GetEnumerator();
-            int i = 1;
-            while (destinationBuildingsEnumerator.MoveNext())
-            {
-                specialBuildings[i++] = (Vector2)destinationBuildingsEnumerator.Current;
-            }
+            //Vector2[] specialBuildings = new Vector2[destinationBuildings.Count() + 1];
+            //specialBuildings[0] = startingBuilding;
+            //IEnumerator destinationBuildingsEnumerator = destinationBuildings.GetEnumerator();
+            //int i = 1;
+            //while (destinationBuildingsEnumerator.MoveNext())
+            //{
+            //    specialBuildings[i++] = (Vector2)destinationBuildingsEnumerator.Current;
+            //}
 
             Assignment3FloydWarshall floydwarshall = new Assignment3FloydWarshall(roads.ToArray());
             floydwarshall.SaveAdjacencyMatrixToFile("Assignment 3 - Floyd Warshall adjacency matrix");
             floydwarshall.SaveDistanceMatrixToFile("Assignment 3 - Floyd Warshall distance matrix");
             floydwarshall.SavePredecessorMatrixToFile("Assignment 3 - Floyd Warshall predecessor matrix");
+
+            List<List<Tuple<Vector2, Vector2>>> routes = new List<List<Tuple<Vector2, Vector2>>>();
+
+            IEnumerator roadsEnumerator = roads.GetEnumerator();
+            int i = 0;
+            while (roadsEnumerator.MoveNext())
+            {
+                if (((Tuple<Vector2, Vector2>)roadsEnumerator.Current).Item1 == startingBuilding)
+                    break;
+                i++;
+            }
+
+            IEnumerator destinationBuildingsEnumerator = destinationBuildings.GetEnumerator();
+            while (destinationBuildingsEnumerator.MoveNext())
+            {
+                for (int j = 0; j < floydwarshall.predecessorMatrix.GetLength(1); j++)
+                {
+                    if (floydwarshall.predecessorMatrix[i, j].Item2 == (Vector2)destinationBuildingsEnumerator.Current)
+                    {
+                        Console.WriteLine("Distance from {0} to {1} is {2}.", startingBuilding, destinationBuildingsEnumerator.Current, floydwarshall.distanceMatrix[i, j]);
+                        List<Tuple<Vector2, Vector2>> temp = new List<Tuple<Vector2, Vector2>>();
+                        temp.Add((Tuple<Vector2, Vector2>)destinationBuildingsEnumerator.Current);
+                        routes.Add(temp);
+                    }
+                }
+            }
 
             return new List<List<Tuple<Vector2, Vector2>>>();
 
@@ -128,6 +150,6 @@ namespace EntryPoint
 
             //return result;
         }
-    }
+}
 #endif
 }
