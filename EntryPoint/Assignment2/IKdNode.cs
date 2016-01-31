@@ -12,5 +12,7 @@ namespace EntryPoint.Assignment2
         Tuple<T,T> key { get; }
         IKdNode<T> left { get; }
         IKdNode<T> right { get; }
+        // If you want to make this a ALV tree
+        // int balance { get; } 
     }
 }

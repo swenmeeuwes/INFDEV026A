@@ -21,7 +21,8 @@ namespace EntryPoint.Assignment2
         }
         public IEnumerable<Vector2> GetAllNodesWithinDistance(Vector2 startPosition, float distance)
         {
-            return GetAllNodesWithinDistanceRec(new List<Vector2>(), root, startPosition, distance);
+            //return GetAllNodesWithinDistanceRec(new List<Vector2>(), root, startPosition, distance);
+            return GetAllNodesWithinDistanceNonRec(root, startPosition, distance);
         }
         public void PrintPreOrder()
         {
@@ -35,6 +36,8 @@ namespace EntryPoint.Assignment2
         {
             PrintPostOrderRec(root);
         }
+
+        // Insert options
         // Option 1
         private IKdNode<float> InsertRec(IKdNode<float> root, Tuple<float, float> key, int dimension)
         {
@@ -59,7 +62,7 @@ namespace EntryPoint.Assignment2
                     return new KdNode<float>(root.key, root.left, InsertRec(root.right, key, dimension));
             }
         }
-        //Option2
+        //Option 2
         private IKdNode<float> InsertXRec(IKdNode<float> root, Tuple<float, float> key)
         {
             if (root.isEmpty)
@@ -85,6 +88,9 @@ namespace EntryPoint.Assignment2
             else
                 return new KdNode<float>(root.key, root.left, InsertXRec(root.right, key));
         }
+
+        // Search options
+        // Option 1
         private IEnumerable<Vector2> GetAllNodesWithinDistanceRec(List<Vector2> foundNodes, IKdNode<float> root, Vector2 startPosition, float distance)
         {
             if (root.isEmpty)
@@ -93,6 +99,26 @@ namespace EntryPoint.Assignment2
                 foundNodes.Add(new Vector2(root.key.Item1, root.key.Item2));
             GetAllNodesWithinDistanceRec(foundNodes, root.left, startPosition, distance);
             GetAllNodesWithinDistanceRec(foundNodes, root.right, startPosition, distance);
+            return foundNodes;
+        }
+        // Option 2
+        private IEnumerable<Vector2> GetAllNodesWithinDistanceNonRec(IKdNode<float> root, Vector2 startPosition, float distance)
+        {
+            List<Vector2> foundNodes = new List<Vector2>();
+
+            Queue<IKdNode<float>> queue = new Queue<IKdNode<float>>();
+            queue.Enqueue(root);
+
+            while(queue.Count > 0) {
+                IKdNode<float> currentNode = queue.Dequeue(); 
+                if(currentNode.isEmpty)
+                    continue;
+                if (Vector2.Distance(startPosition, new Vector2(currentNode.key.Item1, currentNode.key.Item2)) <= distance)
+                    foundNodes.Add(new Vector2(currentNode.key.Item1, currentNode.key.Item2));
+                queue.Enqueue(currentNode.left);
+                queue.Enqueue(currentNode.right);
+            }
+
             return foundNodes;
         }
         private void PrintPreOrderRec(IKdNode<float> root)
